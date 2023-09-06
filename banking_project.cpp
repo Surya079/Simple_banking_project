@@ -1,117 +1,145 @@
 #include<iostream>
+#include<vector>
+#include<string.h>
 using namespace std;
-class  bank
+
+class Account
 {
-protected:
-     int account_no;
-     int pin;
 public:
-    string Name;
-    void getdetails()
+    string accountNumber;
+    string accountHolder;
+    double Balance;
+
+    Account(string number,string holder, double initialBalance)
     {
-        cout<<"Enter the Account Holder name :";
-        cin>>Name;
-        cout<<"Enter Account No :";
-        cin>>account_no;
+        accountNumber = number;
+        accountHolder = holder;
+        Balance = initialBalance;
     }
-    void setpin()
+    void deposit(double amount)
     {
-            cout<<"Enter the pin ";
-            cin>>pin;
-
+        Balance=Balance+amount;
+        cout<<"Deposited : $ "<<amount<<endl;
     }
-
-
+    void withdraw(double amount)
+    {
+        if(Balance>=amount)
+        {
+            Balance=Balance-amount;
+            cout<<"Withdrawn: $ "<<amount<<endl;
+        }
+        else
+        {
+            cout<<"Insufficient balance!"<<endl;
+        }
+    }
+    void display()
+    {
+        cout<<"Account Number : "<<accountNumber<<endl;
+        cout<<"Account Holder : "<<accountHolder<<endl;
+        cout<<"Balance: $ "<<Balance<<endl;
+    }
 };
-class account_balance:public bank
-{
-protected:
-     double balance=0;
-public:
-    void getbal()
-    {
-        cout<<"Available Balance ="<<balance<<endl;
-    }
-};
-class withdraw: public account_balance
-{
-protected:
-    int withdraw_amt=0;
-public:
-    void getwith_amt()
-    {
-       cout<<"Enter the Withdraw amount :";
-       cin>>withdraw_amt;
-       balance=balance-withdraw_amt;
-       cout<<"Available Balance :"<<balance;
-    }
-
-};
-class deposite_amt:public withdraw
-{
-protected:
-    int deposit=0;
-
-public:
-    void getdep()
-    {
-        cout<<"Enter the deposit amount :";
-        cin>>deposit;
-        balance=balance+deposit;
-        cout<<"Available balance :"<<balance<<endl;
-    }
-
-
-};
-
+vector<Account>accounts;
 int main()
 {
-    deposite_amt b;
-    int choise;
-    bool menu;
-
+    while(true)
+    {
     cout<<"\t\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
     cout<<"\t\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~ W E L C O M E ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
     cout<<"\t\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-    cout<<"\t\t~~~~~~~~~~~~~~~~~~~~~I HOPE YOU THANKS TO TRUST ME ~~~~~~~~~~~~~~~~~~~~~~~\n";
+    cout<<"\t\t~~~~~~~~~~~~~~~~~~~~     BANK MANAGEMENT SYSTEM    ~~~~~~~~~~~~~~~~~~~~~~~\n";
     cout<<"\t\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
     cout<<"\t\t~~~~~~~~~~~~~DONT PANIC YOUR ACCOUNT BALANCE IS FULL SECURE~~~~~~~~~~~~~~~\n";
     cout<<"\t\t                                                                          \n";
+    cout<<"\t\t 1.  Create Account"<<endl;
+    cout<<"\t\t 2.  Deposit"<<endl;
+    cout<<"\t\t 3.  Withdraw"<<endl;
+    cout<<"\t\t 4.  Display Account Details"<<endl;
+    cout<<"\t\t 5.  Exit"<<endl;
 
-    b.getdetails();
-    b.setpin();
-
-  while(menu=true)
-  {
-    cout<<"\t\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-    cout<<"\t\t~~~~~~ CHOOSE ANY ONE YOU WANT ~~~~~\n";
-    cout<<"\t\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-    cout<<"                       \n";
-    cout<<"\t\t 1.Account Balance\n";
-    cout<<"                       \n";
-    cout<<"\t\t 2.Withdraw Cash\n";
-    cout<<"                       \n";
-    cout<<"\t\t 3.Deposit Cash";
-    cout<<"                       \n";
+    int choise;
     cin>>choise;
+
     switch(choise)
     {
     case 1:
-        b.getbal();
+        {
+        string accNum,accHolder;
+        double initialBalance;
+        cout<<"Enter Account Number: ";
+        cin>>accNum;
+        cout<<"Enter Account Holder Name: ";
+        cin.ignore();
+        getline(cin,accHolder);
+        cout<<"Enter Initial Balance: ";
+        cin>>initialBalance;
+        Account newAccount(accNum,accHolder,initialBalance);
+        accounts.push_back(newAccount);
+        cout<<"Account created successfully!"<<endl;
         break;
+    }
     case 2:
-        b.getwith_amt();
+        {
+        string accNum;
+        double amount;
+        cout<<"Enter Account Number: ";
+        cin>>accNum;
+        cout<<"Enter Deposit Amount: ";
+        cin>>amount;
+        for(Account &acc: accounts)
+        {
+            if(acc.accountNumber == accNum)
+            {
+                acc.deposit(amount);
+                break;
+            }
+        }
         break;
+    }
     case 3:
-        b.getdep();
+        {
+        string accNum;
+        double amount;
+        cout<<"Enter Account Number: ";
+        cin>>accNum;
+        cout<<"Enter withdraw Amount: ";
+        cin>>amount;
+        for(Account &acc:accounts)
+        {
+            if(acc.accountNumber==accNum)
+            {
+                acc.withdraw(amount);
+                break;
+            }
+        }
         break;
+       }
+    case 4:
+        {
+        string accNum;
+        cout<<"Enter Account Number: ";
+        cin>>accNum;
+        for(Account &acc : accounts)
+        {
+            if(acc.accountNumber == accNum)
+            {
+                acc.display();
+                break;
+            }
+        }
+        break;
+        }
+    case 5:
+        cout<<"Exiting Program. Goodbye!"<<endl;
+        return 0;
 
     default:
-        cout<<"choose valid one...";
+        cout<<"Invalid choice. Please try again."<<endl;
+
     }
   }
-
+  return 0;
 }
-
 
 
